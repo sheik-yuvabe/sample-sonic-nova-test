@@ -752,6 +752,7 @@ import { read, write } from "node:fs";
 import { promises as fsPromises } from "fs";
 import mcpRoutes from "./routes/mcpRoutes";
 import { MCPToolLoader } from "./tools/mcpToolLoader";
+import "dotenv/config"; // Loads .env file automatically
 
 const logger = process.env.PROD ? _logger : console;
 
@@ -917,8 +918,11 @@ let audioInputEventLastMinute = new Array(60).fill(0);
 //   ? fromContainerMetadata()
 //   : fromIni({ profile: AWS_PROFILE_NAME });
 
+const hasEnvKeys =
+  process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY;
+
 // If keys are in the terminal (Env), use them. Otherwise try the profile.
-const provider = process.env.AWS_ACCESS_KEY_ID
+const provider = hasEnvKeys
   ? fromEnv()
   : process.env.PROD
     ? fromContainerMetadata()
